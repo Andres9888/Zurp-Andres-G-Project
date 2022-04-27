@@ -1,48 +1,40 @@
-import { AlternativePayCheckDistributionList } from "./components/AlternativePayCheckDistributionList"
+import {
+  AlternativePayCheckDistributionList,
+  FormattedSalaryToCurrency as MonthlySalary,
+} from "./components"
 import { useEffect, useState } from "react"
-import { getUserDetails, listUserAccounts, updateUserAccount } from "./api"
-import { FormattedSalary as MonthlySalary } from "./components/FormattedSalary"
-
+import { getUserDetails, listUserAccounts } from "./api"
+import { formatCurrencyToPlaceValue } from "./helper/formatCurrency"
 import styled from "styled-components"
-// function updateUserAccount(
-//   id: string,
-//   account: { splitAllocationAmount: number }
-// ): Promise<Account>;
-// ```
+import useSWR from "swr"
 
 export default function App() {
   const [userDetails, setUserDetails] = useState()
   const [totalAllocation, setTotalAllocation] = useState()
-  const [userAccounts, setUserAccounts] = useState([])
-  const [dataLoaded, setDataLoaded] = useState(false)
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [userDetailsData, userAccountsData] = await Promise.all([
-          getUserDetails(),
-          listUserAccounts(),
-        ])
-
-        setUserDetails(userDetailsData)
-        setUserAccounts(userAccountsData)
-        setTotalAllocation(userDetailsData.monthlySalary)
-
-        setDataLoaded(true)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    fetchData()
-  }, [])
-
-  if (!dataLoaded) {
-    return <div>Loading...</div>
+  const [userAccounts, setUserAccounts] = useState()
+  const [defaultAccount, setDefaultAccount] = useState()
+  const multiFetcher = async () => {
+    const [userDetailsData, userAccountsData] = await Promise.all([
+      getUserDetails(),
+      listUserAccounts(),
+    ])
+    const TotalSplitAllocation = userAccountsData
+      .filter((account) => account.splitAllocationAmount)
+      .reduce(
+        (total, account) => total - account.splitAllocationAmount,
+        formatCurrencyToPlaceValue(userDetailsData.monthlySalary, 100)
+      )
+    const defaultAccount = userAccountsData.find((account) => account.isDefault)
+    setUserDetails(userDetailsData)
+    setUserAccounts(userAccountsData)
+    setDefaultAccount(defaultAccount)
+    setTotalAllocation(TotalSplitAllocation)
+    return [userDetailsData, userAccountsData]
   }
+  const { data, error, mutate } = useSWR(["batchedQuery"], multiFetcher)
 
-  //if (error) return <p>Error :(</p>
-
-  const defaultAccount = userAccounts.find((account) => account.isDefault)
+  if (!data) return <div>Loading...</div>
+  if (error) return <div>Error</div>
 
   const { monthlySalary } = userDetails
   const { name: accountType, institution, maskedAccountNumber } = defaultAccount
@@ -52,7 +44,7 @@ export default function App() {
       <Header>Monthly salary</Header>
       <MonthlySalary>{monthlySalary}</MonthlySalary>
       <SubHeader>Paycheck distribution </SubHeader>
-      <PaycheckDistribution>
+      <DefaultPaycheckDistribution>
         <AccountsDetails>
           <AccountsType>
             {accountType}
@@ -64,11 +56,11 @@ export default function App() {
           <DepositDescription>Allocation</DepositDescription>
           <DepositAmount>{totalAllocation}</DepositAmount>
         </DepositDetails>
-      </PaycheckDistribution>
+      </DefaultPaycheckDistribution>
       <AlternativePayCheckDistributionList
         userAccounts={userAccounts}
         totalAllocation={totalAllocation}
-        setTotalAllocation={setTotalAllocation}
+        refetch={mutate}
       />
     </Container>
   )
@@ -91,10 +83,11 @@ const SubHeader = styled.h4`
   font-weight: 400;
 `
 
-const PaycheckDistribution = styled.div`
+const DefaultPaycheckDistribution = styled.div`
   border: 2px solid #dbdbdb;
   display: flex;
   border-radius: 6px;
+  margin-bottom: 20px;
 `
 const AccountsDetails = styled.div`
   margin-left: 25px;
@@ -118,22 +111,23 @@ const DefaultTag = styled.span`
   border-radius: 4px;
 `
 const InstitutionDetails = styled.h5`
-  font-size: 16px;
+  font-size: 18px;
   margin-top: 2px;
+  font-weight: 400;
 `
 const DepositDetails = styled.div`
-  width: 5%;
+  width: 8%;
 `
 
 const DepositDescription = styled.h5`
-  font-size: 16px;
+  font-size: 22px;
   margin-top: 20px;
   margin-bottom: 2px;
   font-weight: 400;
 `
 
 const DepositAmount = styled.h5`
-  font-size: 16px;
+  font-size: 18px;
   margin-top: 2px;
   background-color: #f9f9f9;
   font-weight: 400;

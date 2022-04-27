@@ -1,19 +1,31 @@
-import { AlternativePayCheckDistribution } from "../components/PayCheckDistribution"
-
+import { AlternativePayCheckDistribution } from "../components/AlternativePayCheckDistribution"
+import styled from "styled-components"
 export const AlternativePayCheckDistributionList = ({
   userAccounts,
   totalAllocation,
-  setTotalAllocation,
+  refetch,
 }) => {
   const alternativeAccounts = userAccounts.filter(
     (account) => !account.isDefault
   )
-  return alternativeAccounts.map((account) => (
-    <AlternativePayCheckDistribution
-      key={account.id}
-      alternativeAccount={account}
-      totalAllocation={totalAllocation}
-      setTotalAllocation={setTotalAllocation}
-    />
-  ))
+
+  return (
+    <PaycheckDistributionContainer>
+      {alternativeAccounts.map((account) => (
+        <AlternativePayCheckDistribution
+          key={account.id}
+          alternativeAccount={account}
+          totalAllocation={totalAllocation}
+          refetch={refetch}
+        />
+      ))}
+    </PaycheckDistributionContainer>
+  )
 }
+
+const PaycheckDistributionContainer = styled.div`
+  border: 2px solid #dbdbdb;
+  display: flex;
+  border-radius: 6px;
+  flex-direction: column;
+`

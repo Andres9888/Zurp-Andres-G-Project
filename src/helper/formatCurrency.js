@@ -4,5 +4,12 @@ export const formatCurrency = (salaryInCents) => {
       style: "currency",
       currency: "USD",
     })}`
+
   return ""
+}
+
+export const formatCurrencyToPlaceValue = (salaryInCents, placeValue) => {
+  const formattedCurrency = salaryInCents / placeValue
+
+  return `${formattedCurrency}`
 }

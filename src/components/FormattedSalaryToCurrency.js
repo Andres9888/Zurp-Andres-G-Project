@@ -1,6 +1,7 @@
 import { formatCurrency } from "../helper/formatCurrency"
 import styled from "styled-components"
-export const FormattedSalary = ({ children }) => {
+
+export const FormattedSalaryToCurrency = ({ children }) => {
   return <Salary>{formatCurrency(children)}</Salary>
 }
 
