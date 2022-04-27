@@ -1,7 +1,7 @@
-import { AlternativePayCheckDistribution } from "./components/PayCheckDistribution"
+import { AlternativePayCheckDistributionList } from "./components/AlternativePayCheckDistributionList"
 import { useEffect, useState } from "react"
 import { getUserDetails, listUserAccounts, updateUserAccount } from "./api"
-import { FormattedSalary as MonthlySalary } from "./components/MonthlySalary"
+import { FormattedSalary as MonthlySalary } from "./components/FormattedSalary"
 
 import styled from "styled-components"
 // function updateUserAccount(
@@ -43,9 +43,7 @@ export default function App() {
   //if (error) return <p>Error :(</p>
 
   const defaultAccount = userAccounts.find((account) => account.isDefault)
-  const alternativeAccounts = userAccounts.filter(
-    (account) => !account.isDefault
-  )
+
   const { monthlySalary } = userDetails
   const { name: accountType, institution, maskedAccountNumber } = defaultAccount
 
@@ -67,15 +65,11 @@ export default function App() {
           <DepositAmount>{totalAllocation}</DepositAmount>
         </DepositDetails>
       </PaycheckDistribution>
-      {alternativeAccounts.map((alternativeAccount) => {
-        return (
-          <AlternativePayCheckDistribution
-            alternativeAccount={alternativeAccount}
-            totalAllocation={totalAllocation}
-            setTotalAllocation={setTotalAllocation}
-          />
-        )
-      })}
+      <AlternativePayCheckDistributionList
+        userAccounts={userAccounts}
+        totalAllocation={totalAllocation}
+        setTotalAllocation={setTotalAllocation}
+      />
     </Container>
   )
 }
@@ -128,7 +122,7 @@ const InstitutionDetails = styled.h5`
   margin-top: 2px;
 `
 const DepositDetails = styled.div`
-  width: 12.5%;
+  width: 5%;
 `
 
 const DepositDescription = styled.h5`

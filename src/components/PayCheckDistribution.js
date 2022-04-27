@@ -68,7 +68,7 @@ const InstitutionDetails = styled.h5`
   margin-top: 2px;
 `
 const DepositDetails = styled.div`
-  width: 5%;
+  width: 9%;
 `
 
 const DepositDescription = styled.h5`
