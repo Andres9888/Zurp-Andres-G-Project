@@ -2,7 +2,7 @@ import {
   AlternativePayCheckDistributionList,
   FormattedSalaryToCurrency as MonthlySalary,
 } from "./components"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { getUserDetails, listUserAccounts } from "./api"
 import { formatCurrencyToPlaceValue } from "./helper/formatCurrency"
 import styled from "styled-components"
