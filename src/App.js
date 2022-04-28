@@ -8,6 +8,7 @@ import {
   AlternativePayCheckDistributionList,
   FormattedSalaryToCurrency as MonthlySalary,
   DefaultPaycheckDistribution,
+  Skeleton,
 } from "./components"
 import { formatCurrencyToPlaceValue } from "./helper/formatCurrency"
 
@@ -40,7 +41,7 @@ export default function App() {
     mutate: refetch,
   } = useSWR(["batchedQuery"], multiFetcher)
 
-  if (!data) return <div>Loading...</div>
+  if (!data) return <Skeleton />
   if (error) return <div>Error</div>
 
   const { monthlySalary } = userDetails
