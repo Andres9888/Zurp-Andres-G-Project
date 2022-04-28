@@ -1,5 +1,7 @@
-import { AlternativePayCheckDistribution } from "../components/AlternativePayCheckDistribution"
 import styled from "styled-components"
+
+import { AlternativePayCheckDistribution } from "../components/AlternativePayCheckDistribution"
+
 export const AlternativePayCheckDistributionList = ({
   userAccounts,
   totalAllocation,
@@ -15,8 +17,8 @@ export const AlternativePayCheckDistributionList = ({
         <AlternativePayCheckDistribution
           key={account.id}
           alternativeAccount={account}
-          totalAllocation={totalAllocation}
           refetch={refetch}
+          totalAllocation={totalAllocation}
         />
       ))}
     </PaycheckDistributionContainer>
@@ -25,7 +27,7 @@ export const AlternativePayCheckDistributionList = ({
 
 const PaycheckDistributionContainer = styled.div`
   border: 2px solid #dbdbdb;
-  display: flex;
   border-radius: 6px;
+  display: flex;
   flex-direction: column;
 `

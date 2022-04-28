@@ -1,5 +1,7 @@
-import styled from "styled-components"
 import { useState } from "react"
+
+import styled from "styled-components"
+
 import { updateUserAccount } from "../api"
 
 export const AlternativePayCheckDistribution = ({
@@ -18,13 +20,16 @@ export const AlternativePayCheckDistribution = ({
     splitAllocationAmount || 0
   )
 
+  const blockInvalidChar = (e) =>
+    ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
+
   const handleInputChange = (event) => {
     const { value } = event.target
     if (value < 0) return alert("Please enter a positive number")
     if (value > totalAllocation) {
       alert("You can't allocate more than your monthly salary")
     } else {
-      setAccountDistribution(parseInt(value, 10))
+      setAccountDistribution(Number.parseInt(value, 10))
     }
   }
   const handleSubmit = async () => {
@@ -39,8 +44,6 @@ export const AlternativePayCheckDistribution = ({
       }
     }
   }
-  const blockInvalidChar = (e) =>
-    ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
 
   return (
     <>
@@ -72,39 +75,45 @@ const PaycheckDistribution = styled.div`
 `
 const Divider = styled.div`
   border: 1px solid #dbdbdb;
-  width: 95%;
   margin-left: 25px;
+  width: 95%;
   :last-child {
     display: none;
   }
 `
 
 const AccountsDetails = styled.div`
+  font-weight: 400;
   margin-left: 25px;
   width: 85%;
-  font-weight: 400;
+  @media (max-width: 900px) {
+    width: 70%;
+  }
 `
 const AccountsType = styled.h5`
   font-size: 20px;
-  margin-top: 20px;
-  margin-bottom: 2px;
   font-weight: 400;
+  margin-bottom: 2px;
+  margin-top: 20px;
 `
 
 const InstitutionDetails = styled.h5`
   font-size: 18px;
-  margin-top: 2px;
   font-weight: 400;
+  margin-top: 2px;
 `
 const DepositDetails = styled.div`
   width: 12%;
+  @media (max-width: 900px) {
+    width: 30%;
+  }
 `
 
 const DepositDescription = styled.h5`
   font-size: 22px;
-  margin-top: 20px;
-  margin-bottom: 0px;
   font-weight: 400;
+  margin-bottom: 0px;
+  margin-top: 20px;
 `
 const DepositInputContainer = styled.div`
   display: flex;
@@ -126,6 +135,6 @@ const DepositAmountInput = styled.input.attrs({
   border: 1px solid black;
 `
 const Button = styled.button`
-  margin-left: 7px;
   font-size: 18px;
+  margin-left: 7px;
 `
