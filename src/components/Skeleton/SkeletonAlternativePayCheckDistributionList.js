@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { nanoid } from "nanoid"
 
 import { SkeletonAlternativePayCheckDistribution } from "../Skeleton"
 
@@ -7,8 +8,8 @@ export const SkeletonAlternativePayCheckDistributionList = () => {
 
   return (
     <PaycheckDistributionContainer>
-      {alternativeAccounts.map(() => (
-        <SkeletonAlternativePayCheckDistribution />
+      {alternativeAccounts.map((_emptyItem, index) => (
+        <SkeletonAlternativePayCheckDistribution key={index} />
       ))}
     </PaycheckDistributionContainer>
   )
