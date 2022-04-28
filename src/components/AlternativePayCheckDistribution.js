@@ -33,7 +33,7 @@ export const AlternativePayCheckDistribution = ({
     }
   }
   const handleSubmit = async () => {
-    if (accountDistribution > 0 && accountDistribution <= totalAllocation) {
+    if (accountDistribution >= 0 && accountDistribution <= totalAllocation) {
       try {
         await updateUserAccount(alternativeAccount.id, {
           splitAllocationAmount: accountDistribution,
